@@ -1,0 +1,39 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/logs/main",
+    "pages/counter/main",
+    "pages/history/main",
+    "pages/ranking-list/main",
+    "pages/baseinfo/main",
+    "pages/newList/main",
+    "pages/dateCheck/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FFC53D",
+    "navigationBarTitleText": "TESK",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color":"#b2b2b2",
+    "selectedColor":"#FCD800",
+    "backgroundColor":"white",
+    "list": [{
+      "pagePath": "pages/index/main",
+      "iconPath": "./images/man.png",
+      "text": "首页",
+      "selectedIconPath": "./images/man.png"
+    },{
+      "pagePath": "pages/newList/main",
+      "iconPath": "./images/plus.png",
+      "text": "新建",
+      "selectedIconPath": "./images/plus.png"
+    },{
+      "pagePath": "pages/dateCheck/main",
+      "iconPath": "./images/find.png",
+      "text": "查阅",
+      "selectedIconPath": "./images/find.png"
+    }]
+  }
+}
