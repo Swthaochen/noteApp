@@ -25,6 +25,14 @@
             </view>
           </picker>
         </li>
+        <li>
+          <span>个性签名</span>
+          <picker mode="date" :value="date" start="1970-09-01" end="2018-09-30" @change="bindDateChange">
+            <view class="picker">
+              {{date}}
+            </view>
+          </picker>
+        </li>
       </ul>
       <ul class="other-list">
         <li>
@@ -167,6 +175,7 @@ export default {
   page{
     background-color: #FFC53D;
     margin-bottom: 100rpx;
+    padding-top: 50rpx;
   }
   ul{
     display: flex;

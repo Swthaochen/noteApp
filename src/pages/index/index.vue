@@ -45,6 +45,7 @@ export default {
       })
     },
     mounted: function () {
+      
       var self = this
       axios.get('/task/pending').then(function (res) {
         self.theList = JSON.parse(JSON.stringify(res.data))
