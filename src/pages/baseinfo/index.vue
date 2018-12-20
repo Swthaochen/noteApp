@@ -10,28 +10,24 @@
           <span>性别</span>
           <radio-group class="radio-group" @change="radioChange">
             <label class="radio">
-              <radio value="1" checked="true" hidden="true"/> <img :id="[picked === '1' ? 'checked':'']" src="../../images/man.png"/>
+              <radio value="1" checked="true" hidden="true"/> <img :id="[pickedSex === '1' ? 'checked':'']" src="../../images/man.png"/>
             </label>
             <label class="radio">
-              <radio value="0" hidden="true"/> <img :id="[picked === '0' ? 'checked':'']" src="../../images/woman.png"/>
+              <radio value="0" hidden="true"/> <img :id="[pickedSex === '0' ? 'checked':'']" src="../../images/woman.png"/>
             </label>
           </radio-group>
         </li>
         <li>
           <span>出生年月</span>
-          <picker mode="date" :value="date" start="1970-09-01" end="2018-09-30" @change="bindDateChange">
+          <picker mode="date" :value="date" start="1970-09-01" end="2018-12-30" @change="bindDateChange">
             <view class="picker">
-              {{date}}
+              {{date == ''?'请选择您的出生日期':date}}
             </view>
           </picker>
         </li>
         <li>
           <span>个性签名</span>
-          <picker mode="date" :value="date" start="1970-09-01" end="2018-09-30" @change="bindDateChange">
-            <view class="picker">
-              {{date}}
-            </view>
-          </picker>
+          <input placeholder="请填写您的个性签名" v-model="note"/>
         </li>
       </ul>
       <ul class="other-list">
@@ -39,7 +35,7 @@
           <span>大学</span>
           <picker mode="selector" :value="Index" :range="univer" @change="bindPickerChange">
             <view class="picker">
-              {{univer[Index]}}
+              {{Index == ''? '请选择学校':univer[Index]}}
             </view>
           </picker>
         </li>
@@ -47,7 +43,7 @@
           <span>年级</span>
           <picker mode="selector" :value="GradeIndex" :range="grade" @change="bindgradeChange">
             <view class="picker">
-              {{grade[GradeIndex]}}
+              {{GradeIndex == ''? '请选择年级':grade[GradeIndex]}}
             </view>
           </picker>
         </li>
@@ -60,105 +56,56 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import store from '../../store/vuex.js'
+  import {showModal,showToast,showLoading,hideLoading} from '../../utils/wxAPI.js'
+  import {getSettings,getUserInfo,jumpTo,switchTab} from '../../utils/utils.js'
 export default {
     data () {
       return {
         univer: [
-          '未设置', '清华大学', '北京大学', '上海交通大学', '南京大学', '武汉大学'
+          '清华大学', '北京大学', '上海交通大学', '南京大学', '武汉大学'
         ],
         grade: [
-          '未设置', '大一', '大二', '大三', '大四'
+          '大一', '大二', '大三', '大四'
         ],
-        Index: 0,
+        Index: '',
         myChoose: 1,
-        GradeIndex: 0,
-        date: '未设置',
-        picked: '1',
-        imgUrl: '',
-        textShow: '默认头像'
+        GradeIndex: '',
+        date: '',
+        pickedSex: '1',
+        note:''
       }
     },
-    beforeCreate () {
-      wx.login({
-        success: () => {
-          wx.getUserInfo({
-            success: (res) => {
-              this.imgUrl = res.userInfo.avatarUrl
-            }
-          })
-        }
-      })
-    },
     methods: {
-      imageSubmit: function () {
-        console.log('上传图片')
-        wx.chooseImage({
-          count: 1,
-          sizeType: ['compressed'],
-          sourceType: ['album', 'camera'],
-          success: (res) => {
-            this.imgUrl = res.tempFilePaths
-            console.log(this.imgUrl)
-            this.textShow = '已设置'
-          }
-        })
-      },
       bindDateChange: function (e) {
         this.date = e.mp.detail.value
       },
       radioChange: function (e) {
-        this.picked = e.mp.detail.value
+        this.pickedSex = e.mp.detail.value
       },
       formSubmit: function () {
-        if (parseInt(this.Index) === 0 || this.date === '未设置' || parseInt(this.GradeIndex) === 0) {
-          wx.showModal({
-            title: '提示',
-            content: '请将信息表填写完整',
-            success: function (res) {
-            }
-          })
-        } else {
-          var sendData = {
-            'username': 'root',
-            'avatar': this.imgUrl,
-            'birthday': this.date,
-            'gender': this.picked,
-            'grade': this.grade[this.GradeIndex],
-            'collage': this.univer[this.Index],
-            'location': '陕西西安'
+        var data = {
+          userId:store.state.userInfo.userId,
+          univer:this.univer[this.Index],
+          grade:this.grade[this.GradeIndex],
+          sex:this.pickedSex,
+          note:this.note
+        }
+        let isComplete = true;
+        Object.keys(data).forEach(function(key){
+          //如果有未填写的项
+          if(data[key] == '' || data[key] == undefined){
+            showModal('您的信息填写不完整')
+            isComplete = false
           }
-          wx.uploadFile({
-            url: ' /user/info',
-            filePath: this.imgUrl,
-            formData: null,
-            success: (res) => {
-              console.log('上传成功')
-            },
-            fail: (res) => {
-              console.log('上传失败')
-            },
-            complete: () => {
-              console.log('上传完毕')
-            }
-          })
-          axios.put('/user/info', sendData).then((res) => {
-            if (res.data.message !== 'SUCCESS') {
-              console.log('信息提交失败')
-            } else {
-              console.log('信息提交成功')
-              var url = '/pages/index/main'
-              wx.navigateTo({url})
-            }
-          }).catch((err) => {
-            console.log(err)
-            wx.showModal({
-              title: '提示',
-              content: '已提交',
-              success: function (res) {
-              }
-            })
-          })
+        });
+        console.log(data)
+        if(isComplete)
+        {
+          showToast('信息更新成功','success',true,2000)
+          setTimeout(()=>{
+            switchTab('../index/main')
+          },2000)
         }
       },
       bindPickerChange: function (e) {
@@ -246,5 +193,9 @@ export default {
   }
   #checked{
     border: blueviolet solid 2rpx; ;
+  }
+  li>input{
+    font-size: 28rpx;
+    text-align: right
   }
 </style>

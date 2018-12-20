@@ -15,9 +15,12 @@
 </div>
 </template>
 <script>
+  import {showModal,showToast,showLoading,hideLoading} from '../../utils/wxAPI.js'
   import myIndex from '../../components/myIndex'
   import mylist from '../../components/mylist'
   import axios from 'axios'
+  import store from '../../store/vuex.js'
+import { jumpTo } from '../../utils/utils.js';
 export default {
     data () {
       return {
@@ -29,6 +32,9 @@ export default {
       }
     },
     beforeCreate () {
+      
+
+
       axios.post('/user/login').then(function (res) {
         if (!res.isNew) {
           var url = '/pages/baseinfo/main'
@@ -45,7 +51,17 @@ export default {
       })
     },
     mounted: function () {
-      
+      if(store.state.userInfo.sex == null || store.state.userInfo.birthday_day == null){
+        showModal('您的信息不完整，请填写个人信息').then(()=>{
+          jumpTo('../baseinfo/main')
+        })
+        .catch(()=>{
+          jumpTo('../baseinfo/main')
+        })
+      }
+
+
+
       var self = this
       axios.get('/task/pending').then(function (res) {
         self.theList = JSON.parse(JSON.stringify(res.data))
