@@ -9,11 +9,14 @@ const checkUserInfor = (id)=>{
 const updateUserInfo = (data)=>{
     return ajax(`http://localhost:8002/updateinfo`,'GET',data)
 }
-const getWorkList = (data)=>{
-    return ajax(`http://localhost:8002/getTodayList`,'GET',data)
+const getWorkList = (id)=>{
+    return ajax(`http://localhost:8002/getTodayList?id=${id}`,'GET')
 }
 const configFinish = (id)=>{
     return ajax(`http://localhost:8002/configFinish?id=${id}`,'GET')
+}
+const insertWork = (id)=>{
+    return ajax(`http://localhost:8002/insertWork`,'GET')
 }
 export {
     getUserInfor,

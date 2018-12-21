@@ -21,7 +21,9 @@ import {showModal,showToast,showLoading,hideLoading} from '../utils/wxAPI.js'
     },
     computed:{
       startTime(){
-        let date = new Date(this.msg.starttime)
+        console.log(this.msg.starttime)
+        let date = new Date(parseInt(this.msg.starttime))
+        console.log(date)
         let hour,minite,second
         if(date.getHours() < 10){
           hour = '0' + date.getHours()
@@ -42,7 +44,7 @@ import {showModal,showToast,showLoading,hideLoading} from '../utils/wxAPI.js'
         return date.getFullYear() + '年' + (date.getMonth()+1) + '月' + date.getDate() + '日   ' + hour + ':' + minite + ':' + second
       },
       endTime(){
-        let date = new Date(this.msg.endtime)
+        let date = new Date(parseInt(this.msg.endtime))
         let hour,minite,second
         if(date.getHours() < 10){
           hour = '0' + date.getHours()

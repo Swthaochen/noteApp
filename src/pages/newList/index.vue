@@ -2,17 +2,17 @@
   <div class="container">
     <div class="innerTitle">
       <span>任务标题</span>
-      <input placeholder="请填写您想要完成的任务"/>
+      <input v-model="title" placeholder="请填写您想要完成的任务"/>
     </div>
     <div class="innerText">
       <span>任务描述</span>
-      <input placeholder="请填写您想要完成的任务"/>
+      <input v-model="workCon" placeholder="请填写您想要完成的任务"/>
     </div>
     <div class="innerConfig">
       <span>开始时间</span>
         <picker
           mode="date"
-          :value="date"
+          :value="startdate"
           start="2015-09-01"
           end="2017-09-01"
           @change="bindDateStart"
@@ -24,7 +24,7 @@
       <span>结束时间</span>
         <picker
           mode="date"
-          :value="date"
+          :value="enddate"
           start="2015-09-01"
           end="2017-09-01"
           @change="bindDateEnd"
@@ -36,12 +36,13 @@
       <span>是否设置提醒</span>
       <switch checked bindchange="switch1Change" />
     </div>
-    <div class="bntConfig">
+    <div class="bntConfig" @click="submitForm">
       点击提交
     </div>
   </div>
 </template>
 <script>
+  import store from '../../store/vuex.js'
  export default{
    data(){
      return{
@@ -55,6 +56,16 @@
      },
      bindDateEnd(e){
        this.enddate = e.mp.detail.value
+     },
+     submitForm(){
+       var data = {
+          endtime:this.enddate,
+          starttime:this.startdate,
+          userid:store.state.userInfo.userid,
+          notetitle:this.title,
+          noteCon:this.workCon
+       }
+       console.log(data)
      }
      
    }

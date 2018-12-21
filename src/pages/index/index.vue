@@ -50,7 +50,7 @@ export default {
         })
       }
       //得到当前任务列表
-      getWorkList().then((res)=>{
+      getWorkList(store.state.userInfo.userId).then((res)=>{
         console.log(res)
           this.mywork = res.data
       })
