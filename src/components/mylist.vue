@@ -1,18 +1,88 @@
 <template>
-    <li>
+    <li @click="checkWorkInfo">
       <div class="leftArea">
-        <span class="workTitle">{{msg.title}}</span>
-        <span>发布时间:{{msg.endTime}}</span>
-        <span>截止时间:{{msg.endTime}}</span>
+        <span class="workTitle">{{msg.notetitle}}</span>
+        <span>发布时间:{{startTime}}</span>
+        <span>截止时间:{{endTime}}</span>
       </div>
-      <div class="rightArea"><div class="buttonCon">确认完成</div></div>
+      <div class="rightArea"><div class="buttonCon" @click.stop="configThis">{{isEnable == 0?'确认完成':'已完成'}}</div></div>
     </li>
 </template>
 
 <script>
+  import {configFinish} from '../utils/API.js'
+import {showModal,showToast,showLoading,hideLoading} from '../utils/wxAPI.js'
   export default {
-    props: ['msg']
+    props: ['msg'],
+    data(){
+      return{
+
+      }
+    },
+    computed:{
+      startTime(){
+        let date = new Date(this.msg.starttime)
+        let hour,minite,second
+        if(date.getHours() < 10){
+          hour = '0' + date.getHours()
+          console.log(hour)
+        }else{
+          hour = date.getHours()
+        }
+        if(date.getMinutes() < 10){
+          minite = '0' + date.getMinutes()
+        }else{
+          minite = date.getMinutes()
+        }
+        if(date.getSeconds() < 10){
+          second = '0' + date.getSeconds()
+        }else{
+          second = date.getSeconds()
+        }
+        return date.getFullYear() + '年' + (date.getMonth()+1) + '月' + date.getDate() + '日   ' + hour + ':' + minite + ':' + second
+      },
+      endTime(){
+        let date = new Date(this.msg.endtime)
+        let hour,minite,second
+        if(date.getHours() < 10){
+          hour = '0' + date.getHours()
+          console.log(hour)
+        }else{
+          hour = date.getHours()
+        }
+        if(date.getMinutes() < 10){
+          minite = '0' + date.getMinutes()
+        }else{
+          minite = date.getMinutes()
+        }
+        if(date.getSeconds() < 10){
+          second = '0' + date.getSeconds()
+        }else{
+          second = date.getSeconds()
+        }
+        return date.getFullYear() + '年' + (date.getMonth()+1) + '月' + date.getDate() + '日   ' + hour + ':' + minite + ':' + second
+      },
+      isEnable(){
+        return this.msg.isFinish
+      }
+    },
+    methods:{
+      configThis(){
+        if(this.isEnable == 0){
+            configFinish(this.msg.workid).then((res)=>{
+              console.log(res)
+              showToast('任务完成','success',true,1500)
+              this.$emit('fresh')
+              this.msg.isFinish = 1
+            })
+        }
+      },
+      checkWorkInfo(){
+        console.log('qqqq')
+      }
+    }
   }
+
 </script>
 
 <style scoped>

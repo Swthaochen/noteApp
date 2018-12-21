@@ -21,7 +21,7 @@
           <span>出生年月</span>
           <picker mode="date" :value="date" start="1970-09-01" end="2018-12-30" @change="bindDateChange">
             <view class="picker">
-              {{date == ''?'请选择您的出生日期':date}}
+              {{date == '' || date == null?'请选择您的出生日期':date}}
             </view>
           </picker>
         </li>
@@ -33,9 +33,9 @@
       <ul class="other-list">
         <li>
           <span>大学</span>
-          <picker mode="selector" :value="Index" :range="univer" @change="bindPickerChange">
+          <picker mode="selector" :value="schoolIndex" :range="univer" @change="bindPickerChange">
             <view class="picker">
-              {{Index == ''? '请选择学校':univer[Index]}}
+              {{school}}
             </view>
           </picker>
         </li>
@@ -43,7 +43,7 @@
           <span>年级</span>
           <picker mode="selector" :value="GradeIndex" :range="grade" @change="bindgradeChange">
             <view class="picker">
-              {{GradeIndex == ''? '请选择年级':grade[GradeIndex]}}
+              {{GradeIndex === ''? '请选择年级':grade[GradeIndex]}}
             </view>
           </picker>
         </li>
@@ -59,6 +59,7 @@
   import store from '../../store/vuex.js'
   import {showModal,showToast,showLoading,hideLoading} from '../../utils/wxAPI.js'
   import {getSettings,getUserInfo,jumpTo,switchTab} from '../../utils/utils.js'
+  import {updateUserInfo} from '../../utils/API.js' 
 export default {
     data () {
       return {
@@ -68,13 +69,34 @@ export default {
         grade: [
           '大一', '大二', '大三', '大四'
         ],
-        Index: '',
-        myChoose: 1,
+        schoolIndex: '',
         GradeIndex: '',
         date: '',
         pickedSex: '1',
         note:''
       }
+    },
+    computed:{
+      school(){
+        return this.schoolIndex === ''? '请选择学校':this.univer[this.schoolIndex]
+      }
+    },
+    beforeMount(){
+      var univerSet = store.state.userInfo.univer
+      var gradeSet = store.state.userInfo.grade
+      this.univer.forEach((item,index)=>{
+        if(item == univerSet){
+          this.schoolIndex = index
+        }
+      })
+      this.grade.forEach((item,index)=>{
+        if(item == gradeSet){
+          this.GradeIndex = index
+        }
+      })
+      this.pickedSex = store.state.userInfo.sex || 1
+      this.date = store.state.userInfo.birthday
+      this.note = store.state.userInfo.note
     },
     methods: {
       bindDateChange: function (e) {
@@ -84,12 +106,14 @@ export default {
         this.pickedSex = e.mp.detail.value
       },
       formSubmit: function () {
+        console.log(this.Index)
         var data = {
           userId:store.state.userInfo.userId,
-          univer:this.univer[this.Index],
+          univer:this.univer[this.schoolIndex],
           grade:this.grade[this.GradeIndex],
           sex:this.pickedSex,
-          note:this.note
+          note:this.note,
+          date:this.date
         }
         let isComplete = true;
         Object.keys(data).forEach(function(key){
@@ -102,6 +126,9 @@ export default {
         console.log(data)
         if(isComplete)
         {
+          updateUserInfo(data).then((res)=>{
+            console.log(res)
+          })
           showToast('信息更新成功','success',true,2000)
           setTimeout(()=>{
             switchTab('../index/main')
@@ -109,7 +136,7 @@ export default {
         }
       },
       bindPickerChange: function (e) {
-        this.Index = e.mp.detail.value
+        this.schoolIndex = e.mp.detail.value
       },
       bindgradeChange: function (e) {
         this.GradeIndex = e.mp.detail.value

@@ -8,7 +8,7 @@
     </div>
     <div class="list-content">
       <ul class="list">
-        <mylist v-for="(item,index) in mywork" :key="item" :msg="item" :theindex="index"></mylist>
+        <mylist v-for="(item,index) in mywork" :key="item" :msg="item" :theindex="index" @fresh="getList"></mylist>
       </ul>
     </div>
   </div>
@@ -18,8 +18,8 @@
   import {showModal,showToast,showLoading,hideLoading} from '../../utils/wxAPI.js'
   import myIndex from '../../components/myIndex'
   import mylist from '../../components/mylist'
-  import axios from 'axios'
   import store from '../../store/vuex.js'
+import {getWorkList} from '../../utils/API.js'
 import { jumpTo } from '../../utils/utils.js';
 export default {
     data () {
@@ -31,27 +31,17 @@ export default {
         rootname: ''
       }
     },
-    beforeCreate () {
-      
-
-
-      axios.post('/user/login').then(function (res) {
-        if (!res.isNew) {
-          var url = '/pages/baseinfo/main'
-          wx.navigateTo({url})
-        }
-      }).catch(function (error) {
-        console.log('初始化用户信息失败,原因是：' + error)
-      })
-      axios.get('/user/score').then(function (res) {
-        this.peopleScore = res.peopleScore
-        this.personScore = res.personScore
-      }).catch(function (error) {
-        console.log('初始化用户积分失败,原因是：' + error)
-      })
+    methods:{
+      getList(){
+        //得到当前任务列表
+        getWorkList().then((res)=>{
+          console.log(res)
+            this.mywork = res.data
+        })
+      }
     },
     mounted: function () {
-      if(store.state.userInfo.sex == null || store.state.userInfo.birthday_day == null){
+      if(store.state.userInfo.sex == null || store.state.userInfo.birthday == null){
         showModal('您的信息不完整，请填写个人信息').then(()=>{
           jumpTo('../baseinfo/main')
         })
@@ -59,73 +49,10 @@ export default {
           jumpTo('../baseinfo/main')
         })
       }
-
-
-
-      var self = this
-      axios.get('/task/pending').then(function (res) {
-        self.theList = JSON.parse(JSON.stringify(res.data))
-        for (let i = 0; i < self.workobject.data.groups.length; i++) {
-          var time = self.workobject.data.groups[i].endTime
-          var d = new Date(time)
-          var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
-          self.workobject.data.groups[i].endTime = times
-          self.mywork.push(self.workobject.data.groups[i])
-        }
-      }).catch(function (error) {
-        var test = {
-          'status': 0,
-          'message': 'SUCCESS',
-          'data': {
-            'groups': [
-              {
-                'totalTask': 4,
-                'title': '软件工程大作业',
-                'finishedTask': 5,
-                'finishedPeople': 9,
-                'groupId': 2,
-                'endTime': '2018-05-30T00:00:00.000+0800',
-                'type': 1
-              },
-              {
-                'totalTask': 4,
-                'title': '数据库作业',
-                'finishedTask': 8,
-                'finishedPeople': 8,
-                'groupId': 2,
-                'endTime': '2018-05-30T16:00:00.000+0800',
-                'type': 1
-              },
-              {
-                'totalTask': 4,
-                'title': '算法设计上机',
-                'finishedTask': 1,
-                'finishedPeople': 5,
-                'groupId': 2,
-                'endTime': '2018-05-30T00:00:00.000+0800',
-                'type': 1
-              },
-              {
-                'totalTask': 4,
-                'title': '数据结构大作业',
-                'finishedTask': 4,
-                'finishedPeople': 6,
-                'groupId': 2,
-                'endTime': '2018-05-19T08:04:52.000+0800',
-                'type': 1
-              }
-            ]
-          }
-        }
-        console.log(error)
-        var workobject = JSON.parse(JSON.stringify(test))
-        for (let i = 0; i < workobject.data.groups.length; i++) {
-          var time = workobject.data.groups[i].endTime
-          var d = new Date(time)
-          var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
-          workobject.data.groups[i].endTime = times
-          self.mywork.push(workobject.data.groups[i])
-        }
+      //得到当前任务列表
+      getWorkList().then((res)=>{
+        console.log(res)
+          this.mywork = res.data
       })
     },
     components: {

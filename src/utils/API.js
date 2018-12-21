@@ -6,7 +6,19 @@ const getUserInfor = (data)=>{
 const checkUserInfor = (id)=>{
     return ajax(`http://localhost:8002/check?id=${id}`,'GET',data)
 }
+const updateUserInfo = (data)=>{
+    return ajax(`http://localhost:8002/updateinfo`,'GET',data)
+}
+const getWorkList = (data)=>{
+    return ajax(`http://localhost:8002/getTodayList`,'GET',data)
+}
+const configFinish = (id)=>{
+    return ajax(`http://localhost:8002/configFinish?id=${id}`,'GET')
+}
 export {
     getUserInfor,
-    checkUserInfor
+    checkUserInfor,
+    updateUserInfo,
+    getWorkList,
+    configFinish
 }
