@@ -43,6 +43,9 @@
 </template>
 <script>
   import store from '../../store/vuex.js'
+import {insertWork} from '../../utils/API.js'
+  import {showModal,showToast,showLoading,hideLoading} from '../../utils/wxAPI.js'
+var sd = require('silly-datetime');
  export default{
    data(){
      return{
@@ -58,14 +61,28 @@
        this.enddate = e.mp.detail.value
      },
      submitForm(){
+        let time=sd.format(this.startdate, 'YYYY-MM-DD HH:mm:ss');
+        time = Date.parse(new Date(time))
+        let time1 = sd.format(this.enddate, 'YYYY-MM-DD HH:mm:ss');
+        time1 = Date.parse(new Date(time1))
        var data = {
-          endtime:this.enddate,
-          starttime:this.startdate,
-          userid:store.state.userInfo.userid,
+          endtime:time1,
+          starttime:time,
+          userid:store.state.userInfo.userId,
           notetitle:this.title,
           noteCon:this.workCon
        }
-       console.log(data)
+       insertWork(data).then((res)=>{
+         console.log(res)
+         if(res.statusCode == 200){
+          showToast('新建任务成功','success',true,2000)
+         }else{
+          showToast('新建任务失败','success',true,2000)
+         }
+       })
+       .catch((err)=>{
+          showToast('新建任务失败,请重试','success',true,2000)
+       })
      }
      
    }

@@ -60,6 +60,7 @@
   import {showModal,showToast,showLoading,hideLoading} from '../../utils/wxAPI.js'
   import {getSettings,getUserInfo,jumpTo,switchTab} from '../../utils/utils.js'
   import {updateUserInfo} from '../../utils/API.js' 
+import {getUserInfor} from '../../utils/API.js'
 export default {
     data () {
       return {

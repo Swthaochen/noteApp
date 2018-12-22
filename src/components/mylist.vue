@@ -11,7 +11,8 @@
 
 <script>
   import {configFinish} from '../utils/API.js'
-import {showModal,showToast,showLoading,hideLoading} from '../utils/wxAPI.js'
+  import {showModal,showToast,showLoading,hideLoading} from '../utils/wxAPI.js'
+  import { jumpTo } from '../../../../webProject/bangbang/src/utils/utils.js';
   export default {
     props: ['msg'],
     data(){
@@ -80,7 +81,7 @@ import {showModal,showToast,showLoading,hideLoading} from '../utils/wxAPI.js'
         }
       },
       checkWorkInfo(){
-        console.log('qqqq')
+        jumpTo(`/pages/workDetails/main?id=${this.msg.workid}`)
       }
     }
   }

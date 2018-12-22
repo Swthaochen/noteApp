@@ -15,13 +15,18 @@ const getWorkList = (id)=>{
 const configFinish = (id)=>{
     return ajax(`http://localhost:8002/configFinish?id=${id}`,'GET')
 }
-const insertWork = (id)=>{
-    return ajax(`http://localhost:8002/insertWork`,'GET')
+const insertWork = (data)=>{
+    return ajax(`http://localhost:8002/insertWork`,'GET',data)
+}
+const getWorkInfo = (id)=>{
+    return ajax(`http://localhost:8002/getWorkInfo?id=${id}`,'GET')
 }
 export {
     getUserInfor,
     checkUserInfor,
     updateUserInfo,
     getWorkList,
-    configFinish
+    configFinish,
+    insertWork,
+    getWorkInfo 
 }

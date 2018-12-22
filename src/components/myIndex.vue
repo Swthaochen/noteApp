@@ -23,6 +23,7 @@
           <div><open-data type="userAvatarUrl"></open-data></div>
           <open-data type="userNickName"></open-data>
         </div>
+        <div class="myNote">{{info}}</div>
         <div class="left-mune">
           <ul>
             <li @click="tobase()"><img src="../images/edit.png"/><p>基本资料</p></li>
@@ -39,6 +40,7 @@
 
 <script>
   import card from '@/components/card'
+  import store from '../store/vuex.js'
   export default {
     data () {
       return {
@@ -47,6 +49,11 @@
         isShow: false,
         todayScore: 0,
         weekScore: 0
+      }
+    },
+    computed:{
+      info(){
+        return store.state.userInfo.note;
       }
     },
     mounted: function () {
@@ -207,7 +214,7 @@
 
   .left-mune{
     font-size: 28rpx;
-    margin-top: 132rpx;
+    margin-top: 40rpx;
   }
   .left-mune img{
     margin-bottom: 15rpx;
@@ -246,5 +253,12 @@
   }
   .hide{
     display: none;
+  }
+  .myNote{
+    text-align: center;
+    width: 340rpx;
+    font-size: 26rpx;
+    margin-top: 15rpx;
+    color: rgba(77,59,18,1);
   }
 </style>

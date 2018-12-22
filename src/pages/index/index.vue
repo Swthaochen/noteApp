@@ -34,11 +34,18 @@ export default {
     methods:{
       getList(){
         //得到当前任务列表
-        getWorkList().then((res)=>{
+        getWorkList(store.state.userInfo.userId).then((res)=>{
           console.log(res)
             this.mywork = res.data
         })
       }
+    },
+    onShow(){
+      //得到当前任务列表
+      getWorkList(store.state.userInfo.userId).then((res)=>{
+        console.log(res)
+          this.mywork = res.data
+      })
     },
     mounted: function () {
       if(store.state.userInfo.sex == null || store.state.userInfo.birthday == null){
@@ -49,11 +56,6 @@ export default {
           jumpTo('../baseinfo/main')
         })
       }
-      //得到当前任务列表
-      getWorkList(store.state.userInfo.userId).then((res)=>{
-        console.log(res)
-          this.mywork = res.data
-      })
     },
     components: {
       myIndex,

@@ -17,6 +17,9 @@
         pageNum: 1
       }
     },
+    onLoad(options){
+      console.log(options.date)
+    },
     beforeCreate: function () {
       var self = this
       axios.get(`/user/score/history/${this.pageNum}`).then(function (res) {
