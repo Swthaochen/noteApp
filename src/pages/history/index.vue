@@ -8,7 +8,10 @@
 
 <script>
   import historylis from '../../components/historyList'
-  import axios from 'axios'
+  import store from '../../store/vuex.js'
+  import {getDateWork} from '../../utils/API.js'
+  import {showModal,showToast,showLoading,hideLoading} from '../../utils/wxAPI.js'
+var sd = require('silly-datetime');
   export default {
     data () {
       return {
@@ -19,70 +22,12 @@
     },
     onLoad(options){
       console.log(options.date)
-    },
-    beforeCreate: function () {
-      var self = this
-      axios.get(`/user/score/history/${this.pageNum}`).then(function (res) {
-        var testList = JSON.parse(JSON.stringify(res.data))
-        for (let i = 0; i < testList.data.groups.length; i++) {
-          var time = testList.data.groups[i].endTime
-          var d = new Date(time)
-          var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
-          testList.data.groups[i].endTime = times
-          self.theList.push(testList.data.groups[i])
-        }
-      }).catch(function (error) {
-        console.log(error)
-        var test = {
-          'status': 0,
-          'message': 'SUCCESS',
-          'data': {
-            'groups': [
-              {
-                'title': '数据库作业',
-                'finishedPeople': 5,
-                'unfinishedDay': 4,
-                'groupId': 1,
-                'endTime': '2018-05-11T00:00:00.000+0000',
-                'type': 1
-              },
-              {
-                'title': '算法设计上机',
-                'finishedPeople': 3,
-                'unfinishedDay': 0,
-                'groupId': 2,
-                'endTime': '2018-04-10T00:00:00.000+0000',
-                'type': 0
-              },
-              {
-                'title': '软件工程大作业',
-                'finishedPeople': 7,
-                'unfinishedDay': 3,
-                'groupId': 2,
-                'endTime': '2018-04-10T00:00:00.000+0000',
-                'type': 0
-              },
-              {
-                'title': '数据结构大作业',
-                'finishedPeople': 2,
-                'unfinishedDay': 0,
-                'groupId': 2,
-                'endTime': '2018-04-10T00:00:00.000+0000',
-                'type': 0
-              }
-            ],
-            'pageSum': 1
-          }
-        }
-        var testList = JSON.parse(JSON.stringify(test))
-        for (let i = 0; i < testList.data.groups.length; i++) {
-          var time = testList.data.groups[i].endTime
-          var d = new Date(time)
-          var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
-          testList.data.groups[i].endTime = times
-          self.theList.push(testList.data.groups[i])
-        }
-      })
+        let time=sd.format(options.date, 'YYYY-MM-DD HH:mm:ss');
+        time = Date.parse(new Date(time))
+        getDateWork(time,store.state.userInfo.userId).then((res)=>{
+          console.log(res)
+          this.theList = res.data
+        })
     },
     components: {
       historylis

@@ -21,6 +21,9 @@ const insertWork = (data)=>{
 const getWorkInfo = (id)=>{
     return ajax(`http://localhost:8002/getWorkInfo?id=${id}`,'GET')
 }
+const getDateWork = (date,id)=>{
+    return ajax(`http://localhost:8002/getDateWork?date=${date}&id=${id}`,'GET')
+}
 export {
     getUserInfor,
     checkUserInfor,
@@ -28,5 +31,6 @@ export {
     getWorkList,
     configFinish,
     insertWork,
-    getWorkInfo 
+    getWorkInfo,
+    getDateWork
 }
