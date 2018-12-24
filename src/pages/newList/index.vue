@@ -13,8 +13,6 @@
         <picker
           mode="date"
           :value="startdate"
-          start="2015-09-01"
-          end="2017-09-01"
           @change="bindDateStart"
         >
           <view class="picker">{{startdate == ''?'请选择日期':startdate}}</view>
@@ -25,8 +23,6 @@
         <picker
           mode="date"
           :value="enddate"
-          start="2015-09-01"
-          end="2017-09-01"
           @change="bindDateEnd"
         >
           <view class="picker">{{enddate == ''?'请选择日期':enddate}}</view>

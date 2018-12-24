@@ -17,14 +17,22 @@ var sd = require('silly-datetime');
       return {
         theList: [],
         testList: [],
-        pageNum: 1
+        pageNum: 1,
+        tt:''
       }
     },
     onLoad(options){
-      console.log(options.date)
+        console.log(options.date)
         let time=sd.format(options.date, 'YYYY-MM-DD HH:mm:ss');
         time = Date.parse(new Date(time))
-        getDateWork(time,store.state.userInfo.userId).then((res)=>{
+        this.tt = time
+        getDateWork(this.tt,store.state.userInfo.userId).then((res)=>{
+          console.log(res)
+          this.theList = res.data
+        })
+    },
+    onShow(){
+        getDateWork(this.tt,store.state.userInfo.userId).then((res)=>{
           console.log(res)
           this.theList = res.data
         })

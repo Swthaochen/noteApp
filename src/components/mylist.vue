@@ -13,6 +13,7 @@
   import {configFinish} from '../utils/API.js'
   import {showModal,showToast,showLoading,hideLoading} from '../utils/wxAPI.js'
   import { jumpTo } from '../../../../webProject/bangbang/src/utils/utils.js';
+  import bus from '../store/bus.js'
   export default {
     props: ['msg'],
     data(){
@@ -76,6 +77,7 @@
               console.log(res)
               showToast('任务完成','success',true,1500)
               this.$emit('fresh')
+              bus.$emit('kk')
               this.msg.isFinish = 1
             })
         }

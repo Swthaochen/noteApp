@@ -1,6 +1,7 @@
 <template>
-    <div>
-        <button open-type="getUserInfo" @getuserinfo="bindinfo">授权进入</button>
+    <div class="container">
+        <image src="../../images/beijing.jpg"/>
+        <button open-type="getUserInfo" @getuserinfo="bindinfo">授 权 进 入</button>
     </div>
 </template>
 <script>
@@ -43,5 +44,20 @@ export default {
 }
 </script>
 <style>
-
+.container{
+    padding: 0 0 ;
+}
+image{
+    height: 100vh;
+    width: 100vw;
+}
+button{
+    position: absolute;
+    bottom: 150rpx;
+    background: #FFC53D;
+    color: white;
+    width: 300rpx;
+    font-weight: bold;
+    font-size: 40rpx;
+}
 </style>

@@ -7,12 +7,12 @@
         <open-data type="userNickName"></open-data>
         <div>
           <div class="simpleScore">
-            <p>{{todayScore}}</p>
+            <p>{{num}}</p>
             <p>今日完成</p>
           </div>
           <div class="manyScore">
-            <p>{{weekScore}}</p>
-            <p>本周完成</p>
+            <p>{{num1}}</p>
+            <p>今日任务</p>
           </div>
         </div>
       </div>
@@ -27,8 +27,7 @@
         <div class="left-mune">
           <ul>
             <li @click="tobase()"><img src="../images/edit.png"/><p>基本资料</p></li>
-            <li @click="tolink()"><img src="../images/data.png"/><p>历史任务</p></li>
-            <li @click="toHistory()"><img src="../images/history.png"/><p>任务历史纪录</p></li>
+            <li @click="toHistory()"><img src="../images/history.png"/><p>任务列表</p></li>
           </ul>
         </div>
       </div>
@@ -41,6 +40,8 @@
 <script>
   import card from '@/components/card'
   import store from '../store/vuex.js'
+  import bus from '../store/bus.js'
+import {getWorkList} from '../utils/API.js'
   export default {
     data () {
       return {
@@ -48,7 +49,9 @@
         userInfo: {},
         isShow: false,
         todayScore: 0,
-        weekScore: 0
+        weekScore: 0,
+        num:'',
+        num1:''
       }
     },
     computed:{
@@ -68,10 +71,40 @@
           })
         }
       })
+      bus.$on('kk', content => { 
+        console.log('aaa')
+        this.num++
+      });    
       console.log(this.userInfo)
     },
     onHide: function () {
       this.isShow = false
+    },
+    onShow(){
+      //得到当前任务列表
+      this.num = 0;
+      this.num1 = 0;
+      getWorkList(store.state.userInfo.userId).then((res)=>{
+        res.data.forEach(element => {
+          console.log(element)
+          if(element.isFinish != 0)
+            this.num++
+        });
+        this.num1 = res.data.length;
+      })
+    },
+    mounted(){
+      //得到当前任务列表
+      this.num = 0;
+      this.num1 = 0;
+      getWorkList(store.state.userInfo.userId).then((res)=>{
+        res.data.forEach(element => {
+          console.log(element)
+          if(element.isFinish != 0)
+            this.num++
+        });
+        this.num1 = res.data.length;
+      })
     },
     components: {
       card

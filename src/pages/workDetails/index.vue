@@ -22,6 +22,9 @@
         {{info.noteCon}}
       </div>
     </div>
+    <div class="config" @click="config">
+      {{word}}
+    </div>
     <div class="bntConfig" @click="back">
       返回
     </div>
@@ -29,6 +32,7 @@
 </template>
 <script>
   import store from '../../store/vuex.js'
+  import {configFinish} from '../../utils/API.js'
 import {insertWork,getWorkInfo} from '../../utils/API.js'
   import {showModal,showToast,showLoading,hideLoading} from '../../utils/wxAPI.js'
  export default{
@@ -36,19 +40,36 @@ import {insertWork,getWorkInfo} from '../../utils/API.js'
      return{
        startdate:'',
        enddate:'',
-       info:''
+       info:'',
+       id:'',
+       isEnable:''
      }
    },
+   
    methods:{
      back(){
         wx.navigateBack()
+     },
+     config(){
+        if(this.isEnable == 0){
+          configFinish(this.id).then((res)=>{
+            console.log(res)
+            showToast('任务完成','success',true,1500)
+            getWorkInfo(this.id).then((res)=>{
+                this.info = res.data[0]
+                this.isEnable = res.data[0].isFinish
+            })
+          })
+        }
      }
    },
    onLoad(options){
      console.log(options.id)
+     this.id = options.id
      getWorkInfo(options.id).then((res)=>{
        console.log(res.data[0])
         this.info = res.data[0]
+        this.isEnable = res.data[0].isFinish
      })
    },
    computed:{
@@ -61,6 +82,14 @@ import {insertWork,getWorkInfo} from '../../utils/API.js'
         let date = new Date(parseInt(this.info.endtime))
         console.log(date)
         return date.getFullYear() + '年' + (date.getMonth()+1) + '月' + date.getDate() + '日'
+     },
+     word(){
+       console.log(this.isEnable)
+       if(this.isEnable == 0){
+         return '确认完成'
+       }else{
+         return '已完成'
+       }
      }
    }
 }
@@ -115,7 +144,27 @@ import {insertWork,getWorkInfo} from '../../utils/API.js'
     justify-content: space-between;
   }
   .bntConfig{
+    margin-top: 20rpx;
+    border: 3rpx solid black; 
+    height: 76rpx;
+    width: 80vw;
+    line-height: 76rpx;
+    text-align: center;
+    border-radius: 38rpx;
+    background-color: #FFC53D;
+  }
+  .config{
     margin-top: 100rpx;
+    border: 3rpx solid black; 
+    height: 76rpx;
+    width: 80vw;
+    line-height: 76rpx;
+    text-align: center;
+    border-radius: 38rpx;
+    background-color: #FFC53D;
+  }
+  .delete{
+    margin-top: 20rpx;
     border: 3rpx solid black; 
     height: 76rpx;
     width: 80vw;
