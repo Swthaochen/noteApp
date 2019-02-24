@@ -12,7 +12,7 @@
 <script>
   import {configFinish} from '../utils/API.js'
   import {showModal,showToast,showLoading,hideLoading} from '../utils/wxAPI.js'
-  import { jumpTo } from '../../../../webProject/bangbang/src/utils/utils.js';
+  import { jumpTo } from '../utils/utils.js';
   import bus from '../store/bus.js'
   export default {
     props: ['msg'],

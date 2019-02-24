@@ -21,7 +21,7 @@
 <script>
 import Calendar from 'mpvue-calendar'
 import 'mpvue-calendar/src/style.css' 
-import { jumpTo } from '../../../../../webProject/bangbang/src/utils/utils';
+import { jumpTo } from '../../utils/utils.js';
 export default {
   data () {
     return {
