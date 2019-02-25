@@ -1,28 +1,30 @@
 import ajax from './ajax'
 const getUserInfor = (data)=>{
-    // return ajax('http://132.232.37.121:8002/index','GET',data)
     return ajax('http://132.232.37.121:3000/noteapp/getUserInfo','GET',data)
 }
 const checkUserInfor = (id)=>{
     return ajax(`http://132.232.37.121:8002/check?id=${id}`,'GET',data)
 }
-const updateUserInfo = (data)=>{
-    return ajax(`http://132.232.37.121:8002/updateinfo`,'GET',data)
+const updateUserInfo = (id,data)=>{
+    return ajax(`http://132.232.37.121:3000/noteapp/information/${id}`,'POST',data)
 }
 const getWorkList = (id)=>{
     return ajax(`http://132.232.37.121:3000/noteapp/today_work/${id}`,'GET')
 } 
 const configFinish = (id)=>{
-    return ajax(`http://132.232.37.121:8002/configFinish?id=${id}`,'GET')
+    return ajax(`http://132.232.37.121:3000/noteapp/configFinish?${id}`,'GET')
 }
-const insertWork = (data)=>{
-    return ajax(`http://132.232.37.121:8002/insertWork`,'GET',data)
+const insertWork = (id,data)=>{
+    return ajax(`http://132.232.37.121:3000/noteapp/insert_work/${id}`,'post',data)
 }
 const getWorkInfo = (id)=>{
-    return ajax(`http://132.232.37.121:8002/getWorkInfo?id=${id}`,'GET')
+    return ajax(`http://132.232.37.121:3000/noteapp/getWorkInfo?${id}`,'GET')
 }
-const getDateWork = (date,id)=>{
-    return ajax(`http://132.232.37.121:8002/getDateWork?date=${date}&id=${id}`,'GET')
+const getDateWork = (id,date)=>{
+    return ajax(`http://132.232.37.121:3000/noteapp/getDateWork?/${id}/${date}`,'GET')
+}
+const getUserInformation = (id)=>{
+    return ajax(`http://132.232.37.121:3000/noteapp/getUserInfor/${id}`,'GET')
 }
 export {
     getUserInfor,
@@ -32,5 +34,6 @@ export {
     configFinish,
     insertWork,
     getWorkInfo,
-    getDateWork
+    getDateWork,
+    getUserInformation
 }

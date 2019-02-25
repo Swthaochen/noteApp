@@ -60,7 +60,7 @@
   import {showModal,showToast,showLoading,hideLoading} from '../../utils/wxAPI.js'
   import {getSettings,getUserInfo,jumpTo,switchTab} from '../../utils/utils.js'
   import {updateUserInfo} from '../../utils/API.js' 
-import {getUserInfor} from '../../utils/API.js'
+import {getUserInfor, getUserInformation} from '../../utils/API.js'
 export default {
     data () {
       return {
@@ -127,13 +127,14 @@ export default {
         console.log(data)
         if(isComplete)
         {
-          updateUserInfo(data).then((res)=>{
+          updateUserInfo(store.state.userInfo.userId, data).then((res)=>{
             console.log(res)
+            getUserInformation(store.state.userInfo.userId)
           })
-          showToast('信息更新成功','success',true,2000)
-          setTimeout(()=>{
-            switchTab('../index/main')
-          },2000)
+          // showToast('信息更新成功','success',true,2000)
+          // setTimeout(()=>{
+          //   switchTab('../index/main')
+          // },2000)
         }
       },
       bindPickerChange: function (e) {

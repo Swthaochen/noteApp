@@ -68,7 +68,7 @@ var sd = require('silly-datetime');
           notetitle:this.title,
           noteCon:this.workCon
        }
-       insertWork(data).then((res)=>{
+       insertWork(store.state.userInfo.userId,data).then((res)=>{
          console.log(res)
          if(res.statusCode == 200){
           showToast('新建任务成功','success',true,2000)
